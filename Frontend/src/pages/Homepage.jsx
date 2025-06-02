@@ -1,13 +1,29 @@
-import { HStack, VStack, Text, SimpleGrid, Container } from "@chakra-ui/react";
+import {SimpleGrid, Box, Heading , Text} from "@chakra-ui/react";
 import TaskCard from "../components/TaskCard";
+import { Link } from "react-router-dom";
 
-const Homepage = () => {
+const Homepage = ({task}) => {
+
     return (
-        <Container>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} mt={10}>
-                {<TaskCard key={TaskCard.id} task={task}/>}
+        <Box>
+            <Heading fontWeight={800} fontSize={40} textAlign="center" mt={5} mb={5} color={"blue.500"} border={"1px solid black"} p={5}>
+                Task Management Dashboard
+            </Heading>
+
+            <SimpleGrid w={"full"} mt={10}>
+                {task.map((t) => (<TaskCard tasks={task} key={t._id} task={t}/>))}
             </SimpleGrid>
-        </Container>
+            
+            {task.length === 0 && (
+            <Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
+						No Tasks{" "}
+					<Link to={"/CreateTask"}>
+					    <Text as='span' color='blue.500' _hover={{ textDecoration: "underline" }}>
+						    Create a Task
+					    </Text>
+					</Link>
+		    </Text> )}
+        </Box>
     )
 };
 
