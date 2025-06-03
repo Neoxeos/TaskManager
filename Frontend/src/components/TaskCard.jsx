@@ -1,18 +1,26 @@
-import {Flex, Text, useToast, Button } from "@chakra-ui/react"
+import {Flex, Text, useToast, Button, Box, Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure} from "@chakra-ui/react";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { deleteTask } from "../store/TaskCard";
-import { useEffect, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
 
+const TaskCard = ({task, tasks, taskChange}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-const TaskCard = ({task, tasks}) => {
-    const [newTasks, setNewTasks] = useState(tasks);
+    const newTasks = tasks.filter((t) => t._id !== task._id);
     const toast = useToast();
 
     const handleDelete = async (taskId) => {
         const { success } = await deleteTask(taskId);
-        setNewTasks(newTasks.filter((t) => t._id !== taskId));
 
         if (success) { 
+            taskChange(newTasks);
             toast({
                 title: 'Task deleted.',
                 description: "Task has been deleted successfully.",
@@ -30,8 +38,7 @@ const TaskCard = ({task, tasks}) => {
         })
         }
     } 
-    
-    console.log("newTasks", newTasks);
+
     return (
         <Flex spacing={8} justify={"space-between"} align="center" p={4} borderWidth={1}>
             <Text mr={5}>{task.title}</Text>
@@ -39,9 +46,32 @@ const TaskCard = ({task, tasks}) => {
             <Text>{task.completed ? "Completed" : "Not Completed"}</Text>
             <Text>{task.startDare}</Text>
 
-         <Button onClick={() => handleDelete(task._id)}>
-            <RiDeleteBin5Line />
-         </Button>
+            <Box>
+                <Button onClick={onOpen}>
+                    <FaRegEdit />
+                </Button>
+                <Button onClick={() => handleDelete(task._id)}>
+                    <RiDeleteBin5Line />
+                </Button>
+            </Box>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                <ModalHeader>Modal Title</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                    <Text>Are you sure you want to edit this task?</Text>
+                </ModalBody>
+
+                <ModalFooter>
+                    <Button colorScheme='blue' mr={3} onClick={onClose}>
+                    Close
+                    </Button>
+                    <Button variant='ghost'>Secondary Action</Button>
+                </ModalFooter>
+                </ModalContent>
+            </Modal>
         </Flex>
     )
 };

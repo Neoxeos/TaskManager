@@ -2,7 +2,8 @@ import {SimpleGrid, Box, Heading , Text} from "@chakra-ui/react";
 import TaskCard from "../components/TaskCard";
 import { Link } from "react-router-dom";
 
-const Homepage = ({task}) => {
+
+const Homepage = ({task, taskChange}) => {
 
     return (
         <Box>
@@ -10,8 +11,8 @@ const Homepage = ({task}) => {
                 Task Management Dashboard
             </Heading>
 
-            <SimpleGrid w={"full"} mt={10}>
-                {task.map((t) => (<TaskCard tasks={task} key={t._id} task={t}/>))}
+            <SimpleGrid w={"full"} mt={10} rows={task.length}>
+                {task.map((t) => (<TaskCard taskChange={taskChange} tasks={task} key={t._id} task={t}/>))}
             </SimpleGrid>
             
             {task.length === 0 && (

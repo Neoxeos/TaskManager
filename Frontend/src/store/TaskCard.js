@@ -31,3 +31,17 @@ export const deleteTask = async (taskId) => {
     //console.log("Task deleted:", data);
     return {success: true};
 }
+
+export const createTaskCard = async (newTask) => {
+    const res = await fetch("api/task", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newTask)
+    });
+
+    const data = await res.json();
+    return { success: true, task: data.task};
+}
+    
